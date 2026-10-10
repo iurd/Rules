@@ -1,0 +1,236 @@
+;Custom_OpenClash_Rules
+;MiSub / SubConverter / OpenClash 规则模板（移除广告拦截组、修复规则抢占、优化 Google Play 更新分流）
+;适配 ACL4SSR 风格 custom INI；请在 MiSub 中使用 clashmeta / Mihomo 兼容转换器
+[custom]
+; =========================================================================
+; 规则顺序原则：由上而下首次命中生效
+; 1. 局域网与用户自定义 IP 规则
+; 2. 具体业务策略组（AI、即时通讯、流媒体、商店等）
+; 3. Google Play 专用规则（置于 GoogleCN / Direct 等直连规则之前）
+; 4. 业务分类后的通用直连规则、国内规则、通用代理兜底
+; 已移除广告拦截策略组及对应规则集
+; =========================================================================
+
+; 局域网基础直连
+ruleset=🎯 全球直连,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Lan/Lan.list
+ruleset=🎯 全球直连,[]GEOIP,LAN,no-resolve
+
+; 自包含的用户级 IP / 端口例外规则（不依赖外部自定义规则文件）
+ruleset=🎯 全球直连,[]DST-PORT,7844
+ruleset=🎯 全球直连,[]SRC-PORT,41641
+ruleset=🎯 全球直连,[]IP-CIDR,108.174.48.100/32,no-resolve
+ruleset=🎯 全球直连,[]IP-CIDR,198.41.192.0/24,no-resolve
+ruleset=🎯 全球直连,[]IP-CIDR,198.41.200.0/24,no-resolve
+ruleset=🎯 全球直连,[]IP-CIDR,218.78.7.16/32,no-resolve
+ruleset=🎯 全球直连,[]IP-CIDR,47.246.103.0/24,no-resolve
+ruleset=🎯 全球直连,[]IP-CIDR,47.246.177.0/24,no-resolve
+ruleset=🎯 全球直连,[]IP-CIDR,47.246.180.0/24,no-resolve
+ruleset=🎯 全球直连,[]IP-CIDR,47.246.99.0/24,no-resolve
+ruleset=🎯 全球直连,[]IP-CIDR,5.5.5.5/32,no-resolve
+ruleset=🎯 全球直连,[]IP-CIDR,98.126.27.164/32,no-resolve
+ruleset=🚀 手动选择,[]IP-CIDR,207.241.224.2/32,no-resolve
+
+; -------------------------------------------------------------------------
+; 具体业务规则：放在通用 Google / Direct / GFW / Global 规则之前
+; -------------------------------------------------------------------------
+; AI 服务
+ruleset=🤖 AI服务,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/OpenAI/OpenAI.list
+ruleset=🤖 AI服务,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Claude/Claude.list
+ruleset=🤖 AI服务,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Gemini/Gemini.list
+ruleset=🤖 AI服务,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Copilot/Copilot.list
+
+; Telegram / X / Bilibili / GitHub / Steam
+ruleset=✈️ Telegram,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Telegram/Telegram.list
+ruleset=🕮 X,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Twitter/Twitter.list
+ruleset=📺 哔哩哔哩,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/BiliBili/BiliBili.list
+ruleset=👨🏿‍💻 GitHub,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/GitHub/GitHub.list
+; Steam CDN / SteamCN 为明确的游戏下载直连例外，普通 Steam 流量仍由 Steam 策略组处理
+ruleset=🎯 全球直连,[]DOMAIN-SUFFIX,cm.steampowered.com
+ruleset=🎯 全球直连,[]DOMAIN-SUFFIX,steamcdn-a.akamaihd.net
+ruleset=🎯 全球直连,[]DOMAIN-SUFFIX,steamserver.net
+ruleset=🎯 全球直连,[]IP-CIDR,103.10.124.0/23,no-resolve
+ruleset=🎯 全球直连,[]IP-CIDR,103.28.54.0/24,no-resolve
+ruleset=🎯 全球直连,[]IP-CIDR,146.66.152.0/24,no-resolve
+ruleset=🎯 全球直连,[]IP-CIDR,146.66.155.0/24,no-resolve
+ruleset=🎯 全球直连,[]IP-CIDR,153.254.86.0/24,no-resolve
+ruleset=🎯 全球直连,[]IP-CIDR,155.133.224.0/22,no-resolve
+ruleset=🎯 全球直连,[]IP-CIDR,155.133.230.0/24,no-resolve
+ruleset=🎯 全球直连,[]IP-CIDR,155.133.232.0/23,no-resolve
+ruleset=🎯 全球直连,[]IP-CIDR,155.133.234.0/24,no-resolve
+ruleset=🎯 全球直连,[]IP-CIDR,155.133.236.0/22,no-resolve
+ruleset=🎯 全球直连,[]IP-CIDR,155.133.240.0/23,no-resolve
+ruleset=🎯 全球直连,[]IP-CIDR,155.133.244.0/23,no-resolve
+ruleset=🎯 全球直连,[]IP-CIDR,155.133.246.0/24,no-resolve
+ruleset=🎯 全球直连,[]IP-CIDR,155.133.248.0/21,no-resolve
+ruleset=🎯 全球直连,[]IP-CIDR,162.254.192.0/21,no-resolve
+ruleset=🎯 全球直连,[]IP-CIDR,185.25.182.0/23,no-resolve
+ruleset=🎯 全球直连,[]IP-CIDR,190.217.32.0/22,no-resolve
+ruleset=🎯 全球直连,[]IP-CIDR,192.69.96.0/22,no-resolve
+ruleset=🎯 全球直连,[]IP-CIDR,205.185.194.0/24,no-resolve
+ruleset=🎯 全球直连,[]IP-CIDR,205.196.6.0/24,no-resolve
+ruleset=🎯 全球直连,[]IP-CIDR,208.64.200.0/22,no-resolve
+ruleset=🎯 全球直连,[]IP-CIDR,208.78.164.0/22,no-resolve
+ruleset=🎯 全球直连,[]IP-CIDR,45.121.184.0/24,no-resolve
+ruleset=🎯 全球直连,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/SteamCN/SteamCN.list
+ruleset=🎮 Steam,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Steam/Steam.list
+
+; 即时通讯
+ruleset=💬 即时通讯,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Zoom.list
+ruleset=💬 即时通讯,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Whatsapp/Whatsapp.list
+ruleset=💬 即时通讯,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Line/Line.list
+ruleset=💬 即时通讯,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Discord/Discord.list
+
+; 社交媒体
+ruleset=🌐 社交媒体,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Facebook/Facebook.list
+ruleset=🌐 社交媒体,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Instagram/Instagram.list
+ruleset=🌐 社交媒体,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Reddit/Reddit.list
+
+; 开发者与学术生态
+ruleset=💻 开发者服务,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Developer/Developer.list
+ruleset=📚 学术资源,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Scholar/Scholar.list
+
+; 苹果 / 微软 / OneDrive / Google FCM
+ruleset=🍎 苹果服务,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Apple/Apple.list
+ruleset=Ⓜ️ 微软服务,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Microsoft/Microsoft.list
+ruleset=💾 OneDrive,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/OneDrive/OneDrive.list
+ruleset=📢 谷歌FCM,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/GoogleFCM/GoogleFCM.list
+
+; Google Play / Android 应用更新专用规则
+; 原模板的 GoogleCN.list 和 Direct.list 会把 dl.google.com、dl.l.google.com、update.googleapis.com 等域名设为直连。
+; 将这些更具体的规则放在前面，避免被后续通用直连规则提前命中。
+ruleset=🛍️ Google Play,[]DOMAIN,play.googleapis.com
+ruleset=🛍️ Google Play,[]DOMAIN,play-fe.googleapis.com
+ruleset=🛍️ Google Play,[]DOMAIN,android.clients.google.com
+ruleset=🛍️ Google Play,[]DOMAIN,android.googleapis.com
+ruleset=🛍️ Google Play,[]DOMAIN,androidpublisher.googleapis.com
+ruleset=🛍️ Google Play,[]DOMAIN,clientservices.googleapis.com
+ruleset=🛍️ Google Play,[]DOMAIN,dl.google.com
+ruleset=🛍️ Google Play,[]DOMAIN,dl.l.google.com
+ruleset=🛍️ Google Play,[]DOMAIN,update.googleapis.com
+ruleset=🛍️ Google Play,[]DOMAIN-SUFFIX,gvt1.com
+ruleset=🛍️ Google Play,[]DOMAIN-SUFFIX,gvt2.com
+
+; 其它 Google 服务（放在 Google Play 与 FCM 专用规则之后）
+ruleset=🇬 谷歌服务,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Google/Google.list
+ruleset=🚀 测速工具,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Speedtest/Speedtest.list
+
+; 国际流媒体
+ruleset=🎥 国际流媒体,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Netflix/Netflix.list
+ruleset=🎥 国际流媒体,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Disney/Disney.list
+ruleset=🎥 国际流媒体,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/HBO/HBO.list
+ruleset=🎥 国际流媒体,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/AmazonPrimeVideo/AmazonPrimeVideo.list
+ruleset=🎥 国际流媒体,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/AppleTV/AppleTV.list
+
+; 其它影音娱乐
+ruleset=📹 YouTube,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/YouTube/YouTube.list
+ruleset=🎶 TikTok,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/TikTok/TikTok.list
+ruleset=🎥 Emby,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Emby/Emby.list
+ruleset=🎻 Spotify,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Spotify/Spotify.list
+ruleset=📺 Bahamut,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Bahamut/Bahamut.list
+ruleset=🌎 国外媒体,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/GlobalMedia/GlobalMedia.list
+
+; 海外电商与支付
+ruleset=💳 PayPal,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/PayPal/PayPal.list
+ruleset=🛒 国外电商,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Amazon/Amazon.list
+ruleset=🛒 国外电商,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/eBay/eBay.list
+ruleset=🛒 国外电商,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Shopee/Shopee.list
+ruleset=🛒 国外电商,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Shopify/Shopify.list
+
+; 游戏平台
+ruleset=🎮 游戏平台,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Epic/Epic.list
+ruleset=🎮 游戏平台,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/EA/EA.list
+ruleset=🎮 游戏平台,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Blizzard/Blizzard.list
+ruleset=🎮 游戏平台,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Ubisoft/Ubisoft.list
+ruleset=🎮 游戏平台,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Nintendo/Nintendo.list
+ruleset=🎮 游戏平台,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Sony/Sony.list
+
+; PT 站点：保留 PT 专属策略组，不再被前置 PrivateTracker 直连规则抢占
+ruleset=⏬ PT站点,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/PrivateTracker/PrivateTracker.list
+
+; 除 80/443 外的端口规则：位于具体业务分流之后、通用域名/IP 兜底之前
+ruleset=🔀 非标端口,[]DST-PORT,1-79
+ruleset=🔀 非标端口,[]DST-PORT,81-442
+ruleset=🔀 非标端口,[]DST-PORT,444-65535
+
+; -------------------------------------------------------------------------
+; 通用直连与地区规则：只处理前面的具体业务规则未命中的请求
+; -------------------------------------------------------------------------
+; GoogleCN 仅作为 Google 专用规则之后的直连补充
+ruleset=🎯 全球直连,https://cdn.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/GoogleCN.list
+
+; 通用直连列表放在具体业务策略组之后，避免抢占其分流
+ruleset=🎯 全球直连,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Direct/Direct.list
+
+; 中国域名与 IP 直连兜底
+ruleset=🎯 全球直连,https://cdn.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/ChinaDomain.list
+ruleset=🎯 全球直连,https://cdn.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/ChinaCompanyIp.list
+ruleset=🎯 全球直连,https://cdn.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/ChinaIp.list
+ruleset=🎯 全球直连,[]GEOIP,CN,no-resolve
+
+; GFW 代理与国外域名兜底（位于具体业务、国内直连规则之后）
+ruleset=🚀 手动选择,https://cdn.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/ProxyGFWlist.list
+ruleset=🌍 国外域名,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Global/Global.list
+
+; 最终兜底
+ruleset=🐟 漏网之鱼,[]FINAL
+
+; =========================================================================
+; 策略组定义
+; =========================================================================
+; 基础叶子组
+custom_proxy_group=🌐 全部节点`select`((?i)^(?!.*(?:流量|套餐|官网|邀请|免翻|群组|节点|订阅)).*)
+custom_proxy_group=♻️ 自动选择`url-test`((?i)^(?!.*(?:流量|套餐|官网|邀请|免翻|群组|节点|订阅)).*)`https://www.gstatic.com/generate_204`300,,50
+
+; 核心业务组
+custom_proxy_group=🤖 AI服务`select`[]🇺🇸 美国节点`[]🇯🇵 日本节点`[]🇸🇬 新加坡节点`[]🇼🇸 台湾节点`[]🚀 手动选择`[]♻️ 自动选择`[]🌐 全部节点
+custom_proxy_group=✈️ Telegram`select`[]🇸🇬 新加坡节点`[]🇭🇰 香港节点`[]🇯🇵 日本节点`[]🇺🇸 美国节点`[]🚀 手动选择`[]♻️ 自动选择`[]🌐 全部节点
+custom_proxy_group=🕮 X`select`[]🚀 手动选择`[]🇭🇰 香港节点`[]🇯🇵 日本节点`[]🇺🇸 美国节点`[]🇸🇬 新加坡节点`[]♻️ 自动选择`[]🌐 全部节点
+custom_proxy_group=📺 哔哩哔哩`select`[]🎯 全球直连`[]🇭🇰 香港节点`[]🇼🇸 台湾节点`[]🚀 手动选择`[]♻️ 自动选择`[]🌐 全部节点
+custom_proxy_group=👨🏿‍💻 GitHub`select`[]🚀 手动选择`[]🎯 全球直连`[]🇭🇰 香港节点`[]🇺🇸 美国节点`[]🇯🇵 日本节点`[]🇸🇬 新加坡节点`[]♻️ 自动选择`[]🌐 全部节点
+custom_proxy_group=🎮 Steam`select`[]🎯 全球直连`[]🚀 手动选择`[]♻️ 自动选择`[]🇭🇰 香港节点`[]🇯🇵 日本节点`[]🇺🇸 美国节点`[]🌐 全部节点
+custom_proxy_group=🛍️ Google Play`select`[]🚀 手动选择`[]♻️ 自动选择`[]🇭🇰 香港节点`[]🇺🇸 美国节点`[]🇯🇵 日本节点`[]🇸🇬 新加坡节点`[]🇼🇸 台湾节点`[]🌐 其他地区`[]🌐 全部节点
+
+; 通讯与多媒体组
+custom_proxy_group=💬 即时通讯`select`[]🚀 手动选择`[]♻️ 自动选择`[]🇭🇰 香港节点`[]🇺🇸 美国节点`[]🇯🇵 日本节点`[]🇸🇬 新加坡节点`[]🇼🇸 台湾节点`[]🇰🇷 韩国节点`[]🌐 其他地区`[]🎯 全球直连`[]🌐 全部节点
+custom_proxy_group=🎥 国际流媒体`select`[]🇸🇬 新加坡节点`[]🇭🇰 香港节点`[]🇺🇸 美国节点`[]🇯🇵 日本节点`[]🇼🇸 台湾节点`[]🇰🇷 韩国节点`[]🚀 手动选择`[]♻️ 自动选择`[]🎯 全球直连`[]🌐 全部节点
+custom_proxy_group=🌐 社交媒体`select`[]🚀 手动选择`[]♻️ 自动选择`[]🇭🇰 香港节点`[]🇺🇸 美国节点`[]🇯🇵 日本节点`[]🇸🇬 新加坡节点`[]🇼🇸 台湾节点`[]🇰🇷 韩国节点`[]🌐 其他地区`[]🌐 全部节点
+custom_proxy_group=📹 YouTube`select`[]🇸🇬 新加坡节点`[]🇭🇰 香港节点`[]🇺🇸 美国节点`[]🇯🇵 日本节点`[]🇼🇸 台湾节点`[]🇰🇷 韩国节点`[]🚀 手动选择`[]♻️ 自动选择`[]🌐 全部节点
+custom_proxy_group=🎶 TikTok`select`[]🇸🇬 新加坡节点`[]🇯🇵 日本节点`[]🇺🇸 美国节点`[]🇭🇰 香港节点`[]🚀 手动选择`[]♻️ 自动选择`[]🌐 全部节点
+custom_proxy_group=🎥 Emby`select`[]🚀 手动选择`[]♻️ 自动选择`[]🎯 全球直连`[]🇭🇰 香港节点`[]🇺🇸 美国节点`[]🇯🇵 日本节点`[]🇸🇬 新加坡节点`[]🌐 全部节点
+custom_proxy_group=🎻 Spotify`select`[]🚀 手动选择`[]♻️ 自动选择`[]🎯 全球直连`[]🇭🇰 香港节点`[]🇺🇸 美国节点`[]🇯🇵 日本节点`[]🇸🇬 新加坡节点`[]🌐 全部节点
+custom_proxy_group=📺 Bahamut`select`[]🇼🇸 台湾节点`[]🇭🇰 香港节点`[]🚀 手动选择`[]♻️ 自动选择`[]🎯 全球直连`[]🌐 全部节点
+custom_proxy_group=🌎 国外媒体`select`[]🚀 手动选择`[]♻️ 自动选择`[]🇭🇰 香港节点`[]🇺🇸 美国节点`[]🇯🇵 日本节点`[]🇸🇬 新加坡节点`[]🇼🇸 台湾节点`[]🇰🇷 韩国节点`[]🌐 其他地区`[]🌐 全部节点
+
+; 基础生态、游戏、电商与其他
+custom_proxy_group=💻 开发者服务`select`[]🚀 手动选择`[]♻️ 自动选择`[]🇭🇰 香港节点`[]🇺🇸 美国节点`[]🇯🇵 日本节点`[]🇸🇬 新加坡节点`[]🇼🇸 台湾节点`[]🇰🇷 韩国节点`[]🌐 其他地区`[]🎯 全球直连`[]🌐 全部节点
+custom_proxy_group=📚 学术资源`select`[]🚀 手动选择`[]♻️ 自动选择`[]🇭🇰 香港节点`[]🇺🇸 美国节点`[]🇯🇵 日本节点`[]🇸🇬 新加坡节点`[]🇼🇸 台湾节点`[]🇰🇷 韩国节点`[]🌐 其他地区`[]🎯 全球直连`[]🌐 全部节点
+custom_proxy_group=🍎 苹果服务`select`[]🎯 全球直连`[]🚀 手动选择`[]♻️ 自动选择`[]🇭🇰 香港节点`[]🇺🇸 美国节点`[]🇯🇵 日本节点`[]🇸🇬 新加坡节点`[]🌐 全部节点
+custom_proxy_group=Ⓜ️ 微软服务`select`[]🎯 全球直连`[]🚀 手动选择`[]♻️ 自动选择`[]🇭🇰 香港节点`[]🇺🇸 美国节点`[]🇯🇵 日本节点`[]🇸🇬 新加坡节点`[]🌐 全部节点
+custom_proxy_group=💾 OneDrive`select`[]🎯 全球直连`[]🚀 手动选择`[]♻️ 自动选择`[]🇭🇰 香港节点`[]🇺🇸 美国节点`[]🇯🇵 日本节点`[]🇸🇬 新加坡节点`[]🌐 全部节点
+custom_proxy_group=📢 谷歌FCM`select`[]🚀 手动选择`[]♻️ 自动选择`[]🎯 全球直连`[]🇭🇰 香港节点`[]🇺🇸 美国节点`[]🇯🇵 日本节点`[]🇸🇬 新加坡节点`[]🌐 全部节点
+custom_proxy_group=🇬 谷歌服务`select`[]🚀 手动选择`[]♻️ 自动选择`[]🇭🇰 香港节点`[]🇺🇸 美国节点`[]🇯🇵 日本节点`[]🇸🇬 新加坡节点`[]🌐 全部节点
+custom_proxy_group=🚀 测速工具`select`[]🎯 全球直连`[]🚀 手动选择`[]♻️ 自动选择`[]🇭🇰 香港节点`[]🇺🇸 美国节点`[]🇯🇵 日本节点`[]🇸🇬 新加坡节点`[]🌐 全部节点
+custom_proxy_group=💳 PayPal`select`[]🎯 全球直连`[]🚀 手动选择`[]♻️ 自动选择`[]🇭🇰 香港节点`[]🇺🇸 美国节点`[]🇯🇵 日本节点`[]🇸🇬 新加坡节点`[]🌐 全部节点
+custom_proxy_group=🛒 国外电商`select`[]🚀 手动选择`[]♻️ 自动选择`[]🇭🇰 香港节点`[]🇺🇸 美国节点`[]🇯🇵 日本节点`[]🇸🇬 新加坡节点`[]🇼🇸 台湾节点`[]🇰🇷 韩国节点`[]🌐 其他地区`[]🌐 全部节点
+custom_proxy_group=🎮 游戏平台`select`[]🎯 全球直连`[]🚀 手动选择`[]♻️ 自动选择`[]🇭🇰 香港节点`[]🇺🇸 美国节点`[]🇯🇵 日本节点`[]🇸🇬 新加坡节点`[]🇼🇸 台湾节点`[]🇰🇷 韩国节点`[]🌐 其他地区`[]🌐 全部节点
+custom_proxy_group=⏬ PT站点`select`[]🇭🇰 香港节点`[]🇺🇸 美国节点`[]🇯🇵 日本节点`[]🇸🇬 新加坡节点`[]🇼🇸 台湾节点`[]🇰🇷 韩国节点`[]🌐 其他地区`[]🚀 手动选择`[]♻️ 自动选择`[]🎯 全球直连`[]🌐 全部节点
+custom_proxy_group=🌍 国外域名`select`[]🎯 全球直连`[]🚀 手动选择`[]♻️ 自动选择`[]🇭🇰 香港节点`[]🇺🇸 美国节点`[]🇯🇵 日本节点`[]🇸🇬 新加坡节点`[]🇼🇸 台湾节点`[]🇰🇷 韩国节点`[]🌐 其他地区`[]🌐 全部节点
+custom_proxy_group=🐟 漏网之鱼`select`[]🎯 全球直连`[]🚀 手动选择`[]♻️ 自动选择`[]🇭🇰 香港节点`[]🇺🇸 美国节点`[]🇯🇵 日本节点`[]🇸🇬 新加坡节点`[]🇼🇸 台湾节点`[]🇰🇷 韩国节点`[]🌐 其他地区`[]🌐 全部节点
+custom_proxy_group=🔀 非标端口`select`[]🐟 漏网之鱼`[]🎯 全球直连`[]🚀 手动选择`[]♻️ 自动选择`[]🌐 全部节点
+
+; 地区节点组
+custom_proxy_group=🇭🇰 香港节点`url-test`(🇭🇰|港|[Hh].?[Kk]|\bHK(?:[-_ ]?\d+(?:[-_ ]?[A-Za-z]{2,})?)?\b|hk|Hong Kong|Hongkong|Hong kong|HongKong|hongkong|HONG KONG|HONGKONG|深港|HKG|九龙|Kowloon|新界|沙田|荃湾|葵涌)`https://www.gstatic.com/generate_204`300,,50
+custom_proxy_group=🇺🇸 美国节点`url-test`(🇺🇸|美|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥|纽约|纽纽|亚特兰大|迈阿密|华盛顿|[Uu].?[Ss]|\bUS(?:[-_ ]?\d+(?:[-_ ]?[A-Za-z]{2,})?)?\b|United States|UnitedStates|UNITED STATES|USA|America|AMERICA|JFK|EWR|IAD|ATL|ORD|MIA|NYC|LAX|SFO|SEA|DFW|SJC)`https://www.gstatic.com/generate_204`300,,50
+custom_proxy_group=🇯🇵 日本节点`url-test`(🇯🇵|日本|川日|东京|大阪|泉日|埼玉|沪日|深日|(?<!尼|-)日|[Jj].?[Pp]|\bJP(?:[-_ ]?\d+(?:[-_ ]?[A-Za-z]{2,})?)?\b|Japan|JAPAN|JPN|NRT|HND|KIX|TYO|OSA|关西|Kansai|KANSAI)`https://www.gstatic.com/generate_204`300,,50
+custom_proxy_group=🇸🇬 新加坡节点`url-test`(🇸🇬|新加坡|坡|狮城|[Ss].?[Gg]|\bSG(?:[-_ ]?\d+(?:[-_ ]?[A-Za-z]{2,})?)?\b|Singapore|SINGAPORE|SIN)`https://www.gstatic.com/generate_204`300,,50
+custom_proxy_group=🇼🇸 台湾节点`url-test`(🇹🇼|🇼🇸|台|新北|彰化|[Tt].?[Ww]|\bTW(?:[-_ ]?\d+(?:[-_ ]?[A-Za-z]{2,})?)?\b|Taiwan|TAIWAN|TWN|TPE|ROC)`https://www.gstatic.com/generate_204`300,,50
+custom_proxy_group=🇰🇷 韩国节点`url-test`(🇰🇷|[Kk].?[Rr]|\bKR(?:[-_ ]?\d+(?:[-_ ]?[A-Za-z]{2,})?)?\b|Korea|KOREA|KOR|首尔|韩|韓|春川|Chuncheon|ICN)`https://www.gstatic.com/generate_204`300,,50
+custom_proxy_group=🌐 其他地区`url-test`(^(?!.*(港|[Hh].?[Kk]|\bHK(?:[-_ ]?\d+(?:[-_ ]?[A-Za-z]{2,})?)?\b|hk|Hong Kong|Hongkong|Hong kong|HongKong|hongkong|HONG KONG|HONGKONG|深港|HKG|🇭🇰|九龙|Kowloon|新界|沙田|荃湾|葵涌|美|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥|纽约|纽纽|亚特兰大|迈阿密|华盛顿|[Uu].?[Ss]|\bUS(?:[-_ ]?\d+(?:[-_ ]?[A-Za-z]{2,})?)?\b|United States|UnitedStates|UNITED STATES|USA|America|AMERICA|JFK|EWR|IAD|ATL|ORD|MIA|NYC|LAX|SFO|SEA|DFW|SJC|🇺🇸|日本|川日|东京|大阪|泉日|埼玉|沪日|深日|(?<!尼|-)日|[Jj].?[Pp]|\bJP(?:[-_ ]?\d+(?:[-_ ]?[A-Za-z]{2,})?)?\b|Japan|JAPAN|JPN|NRT|HND|KIX|TYO|OSA|🇯🇵|关西|Kansai|KANSAI|新加坡|坡|狮城|[Ss].?[Gg]|\bSG(?:[-_ ]?\d+(?:[-_ ]?[A-Za-z]{2,})?)?\b|Singapore|SINGAPORE|SIN|🇸🇬|台|新北|彰化|[Tt].?[Ww]|\bTW(?:[-_ ]?\d+(?:[-_ ]?[A-Za-z]{2,})?)?\b|Taiwan|TAIWAN|TWN|TPE|ROC|🇹🇼|🇼🇸|[Kk].?[Rr]|\bKR(?:[-_ ]?\d+(?:[-_ ]?[A-Za-z]{2,})?)?\b|Korea|KOREA|KOR|首尔|韩|韓|春川|Chuncheon|ICN|🇰🇷|流量|套餐|官网|邀请|免翻|群组|节点|订阅|过滤)).*)`https://www.gstatic.com/generate_204`300,,50
+
+; 核心主控与出站依赖组（放在被引用的业务组之后）
+custom_proxy_group=🚀 手动选择`select`[]♻️ 自动选择`[]🇭🇰 香港节点`[]🇺🇸 美国节点`[]🇯🇵 日本节点`[]🇸🇬 新加坡节点`[]🇼🇸 台湾节点`[]🇰🇷 韩国节点`[]🌐 其他地区`[]🌐 全部节点
+custom_proxy_group=🎯 全球直连`select`[]DIRECT`[]🚀 手动选择`[]♻️ 自动选择`[]🌐 全部节点
+
+; 生成器基础参数
+enable_rule_generator=true
+overwrite_original_rules=true
