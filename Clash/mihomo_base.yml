@@ -66,6 +66,13 @@ dns:
     - "https://1.1.1.1/dns-query#🚀 节点选择"
     - "https://8.8.8.8/dns-query#🚀 节点选择"
   nameserver-policy:
+    # AI 域名显式固定走代理 DoH，避免被宽泛的 geosite:cn 策略分流到国内。
+    "+.claude.ai,+.claude.com,+.anthropic.com,+.claudeusercontent.com,+.claude-cdn.com,+.anthropic.dev":
+      - "https://1.1.1.1/dns-query#🟣 Claude 固定出口"
+      - "https://8.8.8.8/dns-query#🟣 Claude 固定出口"
+    "+.cdn.usefathom.com,+.openai.com,+.chatgpt.com,+.oaistatic.com,+.oaiusercontent.com,+.gemini.google.com,+.generativelanguage.googleapis.com,+.ai.google.dev,+.perplexity.ai,+.pplx.ai,+.grok.com,+.x.ai":
+      - "https://1.1.1.1/dns-query#🚀 节点选择"
+      - "https://8.8.8.8/dns-query#🚀 节点选择"
     "geosite:cn,private":
       - https://doh.pub/dns-query
       - https://dns.alidns.com/dns-query
