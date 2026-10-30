@@ -1,0 +1,75 @@
+# 与 MiSub.ini 配套使用；Subconverter 会在此基础配置上写入节点、策略组和规则。
+mixed-port: 7890
+allow-lan: false
+bind-address: 127.0.0.1
+mode: rule
+log-level: info
+ipv6: false
+unified-delay: true
+tcp-concurrent: true
+find-process-mode: strict
+
+# 不配置 external-controller，避免未加密的控制接口暴露。
+profile:
+  store-selected: true
+  store-fake-ip: true
+
+geox-url:
+  geoip: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geoip.dat
+  geosite: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geosite.dat
+  mmdb: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/country.mmdb
+
+# 客户端使用 TUN 时取消下面整段注释；不同客户端也可能在覆写中管理 TUN。
+# tun:
+#   enable: true
+#   stack: mixed
+#   auto-route: true
+#   auto-detect-interface: true
+#   strict-route: true
+#   dns-hijack:
+#     - any:53
+#     - tcp://any:53
+
+# 只接管本机 DNS，不向局域网开放明文 DNS 服务。
+dns:
+  enable: true
+  listen: 127.0.0.1:1053
+  ipv6: false
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  fake-ip-filter-mode: blacklist
+  fake-ip-filter:
+    - "*.lan"
+    - "*.local"
+    - "*.localhost"
+    - "*.home.arpa"
+    - "time.*.com"
+    - "ntp.*.com"
+    - "+.msftconnecttest.com"
+    - "+.msftncsi.com"
+  use-hosts: true
+  use-system-hosts: true
+
+  # 境外 DoH 强制走“节点选择”；节点域名只通过国内 DoH 解析，避免循环依赖。
+  respect-rules: true
+  default-nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+  proxy-server-nameserver:
+    - https://doh.pub/dns-query
+    - https://dns.alidns.com/dns-query
+  direct-nameserver:
+    - https://doh.pub/dns-query
+    - https://dns.alidns.com/dns-query
+  direct-nameserver-follow-policy: true
+  nameserver:
+    - "https://1.1.1.1/dns-query#🚀 节点选择"
+    - "https://8.8.8.8/dns-query#🚀 节点选择"
+  nameserver-policy:
+    "geosite:cn,private":
+      - https://doh.pub/dns-query
+      - https://dns.alidns.com/dns-query
+
+# 不使用 system DNS 或 fallback，防止境外域名查询从本地网络出口泄漏。
+# WebRTC：MiSub.ini 默认拒绝 UDP/TCP 3478、5349、19302。
+# 这可能影响语音、视频、会议和 P2P；浏览器仍应禁用非代理 UDP 或使用 WebRTC 防泄漏策略。
